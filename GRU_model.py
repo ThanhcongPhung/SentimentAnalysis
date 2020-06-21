@@ -110,7 +110,7 @@ def get_train_input(train_texts):
     model = KeyedVectors.load("models/word2vec_skipgram.model")
     for line in train_texts:
         embedding = []
-        for x in range(100):
+        for x in range(140):
             if len(line) <= x:
                 embedding.append(np.zeros(100, dtype=np.float32))
             else:
@@ -125,8 +125,8 @@ if __name__ == '__main__':
     # model_fasttext.train(train, total_examples=model_fasttext.corpus_count, epochs=model_fasttext.iter)
     #
     # model_fasttext.wv.save("models/fasttext_gensim.model")
-    # model = Word2Vec(tokenize, size=100, window=3, min_count=1, workers=4)
-    # model.save("models/word2vec_skipgram.model")
+    model = Word2Vec(tokenize, size=100, window=3, min_count=1, workers=4)
+    model.save("models/word2vec_skipgram.model")
     start_time = time.time()
 
     # X_test = np.reshape(np.array(test_tokenize), np.array(test_tokenize).shape + (1,1))
@@ -145,12 +145,12 @@ if __name__ == '__main__':
     model.add(Dropout(0.2))
     model.add(GRU(32))
     model.add(Dense(100, activation='relu'))
-    model.add(Dense(1, activation='sigmoid'))
+    model.add(Dense(3, activation='sigmoid'))
     model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
     model.summary()
     model.fit(X_train, Y_train, epochs=15, batch_size=64)
     scores = model.evaluate(X_train, Y_train)
-    model.save("models/GRU_model.model")
+    model.save("models/GRU_model1.model")
     print("Accuracy: %.2f%%" % (scores[1] * 100))
 
     print()
