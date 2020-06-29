@@ -248,15 +248,27 @@ if __name__ == '__main__':
     model.summary()
 
     # run model
-    history = model.fit(x_train_text, y_train_label, epochs=15, batch_size=64,
-                        validation_data=(x_test_text, y_test_label),
+    history = model.fit(X_text, X_label, epochs=15, batch_size=64,
+                        validation_data=(X_text_test, Y_label),
                         verbose=1)
-    #test model
+    # test model
+    # scores_train = model.evaluate(x_train_text, y_train_label, verbose=1)
+    # scores_test = model.evaluate(x_test_text, y_test_label, verbose=1)
     loss, accuracy, f1_score, precision, recall = model.evaluate(X_text_test, Y_label, verbose=0)
-    scores_train = model.evaluate(x_train_text, y_train_label, verbose=1)
-    scores_test = model.evaluate(x_test_text, y_test_label, verbose=1)
-    print("Accuracy train: %.2f%%" % (scores_train[1] * 100))
-    print("Accuracy test: %.2f%%" % (scores_test[1] * 100))
+    # print("Accuracy train: %.2f%%" % (scores_train[1] * 100))
+    # print("Accuracy test: %.2f%%" % (scores_test[1] * 100))
+    print("Loss: %.2f%%" % (loss * 100))
+    print("Accuracy: %.2f%%" % (accuracy * 100))
+    print("F1_scores: %.2f%%" % (f1_score * 100))
+    print("Precision: %.2f%%" % (precision * 100))
+    print("Recall: %.2f%%" % (recall * 100))
+
+    # print("Loss: %.2f%%" % (loss[0] * 100))
+    # print("Accuracy: %.2f%%" % (accuracy[0] * 100))
+    # print("F1_scores: %.2f%%" % (f1_score[0] * 100))
+    # print("Precision: %.2f%%" % (precision[0] * 100))
+    # print("Recall: %.2f%%" % (recall[0] * 100))
+
     # plot loss during training
     pyplot.subplot(211)
     pyplot.title('Loss')
@@ -267,11 +279,23 @@ if __name__ == '__main__':
 
     pyplot.subplot(212)
     pyplot.title('Accuracy')
-    pyplot.plot(history.history['accuracy'], label='train')
+    pyplot.plot(history.history['acc'], label='train')
     pyplot.plot(history.history['val_acc'], label='test')
     pyplot.legend()
     pyplot.show()
 
-
     print()
     print("Execution Time %s seconds: " % (time.time() - start_time))
+    from sklearn.metrics import classification_report
+
+    start_time_test = time.time()
+    prediction = model.predict(X_text_test)
+    label = []
+    for n in prediction:
+        label.append(np.argmax(n))
+    print(prediction)
+
+    print(classification_report(label_test, label))
+
+    print()
+    print("Execution Time test %s seconds: " % (time.time() - start_time_test))
