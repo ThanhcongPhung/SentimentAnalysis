@@ -239,22 +239,22 @@ if __name__ == '__main__':
 
     # build model
     model = Sequential()
-    model.add(GRU(64, return_sequences=True, input_shape=input_dim))
+    model.add(GRU(128, return_sequences=True, input_shape=input_dim))
     model.add(Dropout(0.2))
-    model.add(GRU(32))
+    model.add(GRU(64))
     model.add(Dense(100, activation='relu'))
     model.add(Dense(3, activation='sigmoid'))
     model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy', f1_m, precision_m, recall_m])
     model.summary()
 
     # run model
-    history = model.fit(X_text, X_label, epochs=15, batch_size=64,
-                        validation_data=(X_text_test, Y_label),
+    history = model.fit(x_train_text, y_train_label, epochs=200, batch_size=64,
+                        validation_data=(x_test_text, y_test_label),
                         verbose=1)
     # test model
     # scores_train = model.evaluate(x_train_text, y_train_label, verbose=1)
     # scores_test = model.evaluate(x_test_text, y_test_label, verbose=1)
-    loss, accuracy, f1_score, precision, recall = model.evaluate(X_text_test, Y_label, verbose=0)
+    loss, accuracy, f1_score, precision, recall = model.evaluate(x_test_text, y_test_label, verbose=0)
     # print("Accuracy train: %.2f%%" % (scores_train[1] * 100))
     # print("Accuracy test: %.2f%%" % (scores_test[1] * 100))
     print("Loss: %.2f%%" % (loss * 100))
@@ -293,7 +293,7 @@ if __name__ == '__main__':
     label = []
     for n in prediction:
         label.append(np.argmax(n))
-    print(prediction)
+    # print(prediction)
 
     print(classification_report(label_test, label))
 
